@@ -1,7 +1,7 @@
 spring:
   datasource:
     #    url: jdbc:mysql://175.178.229.62:3306/bcosteaching?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8
-    url: jdbc:mysql://43.138.236.247:3306/bcosteaching?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8
+    url: jdbc:mysql://127.0.0.1:3306/bcosteaching?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -43,8 +43,8 @@ spring:
   mail:
     host: smtp.qq.com
     port: 465
-    username: 1833769217@qq.com
-    password: defkkegcyahzfcce # smtp授权码
+    username:
+    password:
     properties:
       mail:
         smtp:
@@ -65,7 +65,7 @@ mybatis:
 
 
 system:
-  peers: 43.138.236.247:20200
+  peers:
   #system.peers=127.0.0.1:20200
   ### Required
   groupId: 1
@@ -92,4 +92,4 @@ banner:
 
 
 email:
-  ip: 43.138.236.247
+  ip:

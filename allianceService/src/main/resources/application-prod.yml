@@ -50,11 +50,13 @@ spring:
       max-file-size: 10MB # 最大文件
       max-request-size: 50MB # 最大请求
 
+
+# 待配置
   mail:
-    host: smtp.qq.com
-    port: 465
-    username: 1833769217@qq.com
-    password: defkkegcyahzfcce # smtp授权码
+    host:
+    port:
+    username:
+    password:
     properties:
       mail:
         smtp:
@@ -63,9 +65,9 @@ spring:
 
   redis:
     database: 0
-    host: 43.138.236.247
-    port: 6379
-    password: 6379
+    host:
+    port:
+    password:
     timeout: 1000
     connect-timeout: 500
     jedis:
@@ -90,8 +92,8 @@ file:
 #机构平台的管理员邮箱：如果有机构申请加入，这两个邮箱会收到审批邮件
 fbAdmin:
 #  email: 1312665687@qq.com
-  email: 841572832@qq.com
+  email:
 
 system:
   ip: localhost
-  #ip: 43.138.236.247
+

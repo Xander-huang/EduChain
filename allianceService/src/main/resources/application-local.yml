@@ -5,10 +5,10 @@ spring:
       max-request-size: 50MB # 最大请求
 
   mail:
-    host: smtp.qq.com
-    port: 465
-    username: 415229929@qq.com
-    password: heyppppwxujdcahi # smtp授权码
+    host:
+    port:
+    username:
+    password:
     properties:
       mail:
         smtp:
@@ -33,4 +33,4 @@ file:
     path: F:/files
 
 fbAdmin:
-  email: zymail68@foxmail.com,1501024528@qq.com
+  email:

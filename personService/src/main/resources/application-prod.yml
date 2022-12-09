@@ -40,10 +40,10 @@ spring:
       max-file-size: 10MB # 最大文件
       max-request-size: 50MB # 最大请求
   mail:
-    host: smtp.qq.com
-    port: 465
-    username: 1833769217@qq.com
-    password: defkkegcyahzfcce # smtp授权码
+    host:
+    port:
+    username:
+    password:
     properties:
       mail:
         smtp:
@@ -51,7 +51,7 @@ spring:
             enable: true
   redis:
     database: 0
-    host: 43.138.236.247
+    host:
     port: 6379
     password: 6379
     timeout: 1000
