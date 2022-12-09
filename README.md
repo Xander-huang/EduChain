@@ -37,7 +37,7 @@
 
 ## Videos
 
-youtobe link
+https://youtu.be/upDUfN2HTdw
 
 
 
@@ -90,21 +90,17 @@ system.contract.courseSolAddress=0x79285afd82120fa9b3f63d434bd7bc8bc64ef138
 system.contract.achieveSolAddress=0x6fce93b0b10d09e7454cdd93c87da66fc72c0463
 ```
 
-**3.configure blockchain certificate link, contract address, MySQL database and Redis account password
-4.configure system-manager's email in the yaml file**
-**5.Start nginx after replacing nignix.conf with XX file**
-**6.Start the three Springboot services of allianceService, checkService and personService in IDEA**
+**3.configure blockchain certificate link, contract address, MySQL database and Redis account password**
+
+**4.configure system-manager's email in the yaml file**
+
+**5.Start the three Springboot services of allianceService, checkService and personService in IDEA**
 
 _**To run Frontend**_
+
 The Vue projects of alliance, checker and person are started as follows
 
 ```npm
 $ npm install
 $ npm run serve
 ```
-
-
-### License
-
-This project is unde MIT license. See the file [LICENSE](https://github.com/rodrigofolha/pack-food/blob/develop/LICENSE) to more details.
-
