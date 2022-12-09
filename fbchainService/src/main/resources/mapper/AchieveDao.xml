@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.zy68.fbChainService.dao.AchieveDao">
+
+    <resultMap type="top.zy68.fbChainService.entity.Achieve" id="AchieveMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="eduId" column="edu_id" jdbcType="VARCHAR"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="acquireTime" column="acquire_time" jdbcType="TIMESTAMP"/>
+        <result property="type" column="type" jdbcType="VARCHAR"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <result property="certifyUri" column="certify_uri" jdbcType="VARCHAR"/>
+        <result property="auditStatus" column="audit_status" jdbcType="INTEGER"/>
+        <result property="feedback" column="feedback" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--新增一条记录-->
+    <insert id="insertAnAchieve" keyProperty="id" useGeneratedKeys="true">
+        insert into achieve(edu_id, title, acquire_time, type, remark, certify_uri, audit_status, feedback)
+        values (#{eduId}, #{title}, #{acquireTime}, #{type}, #{remark}, #{certifyUri}, #{auditStatus}, #{feedback})
+    </insert>
+
+    <update id="updateEduId">
+        update achieve
+        set edu_id = #{newEduId}
+        where edu_id = #{oldEduId}
+    </update>
+
+    <delete id="deleteAchieveByEduId">
+        delete
+        from achieve
+        where edu_id = #{eduId}
+    </delete>
+
+    <!--通过教育ID查询所有-->
+    <select id="queryAllByEduId" resultMap="AchieveMap">
+        select id,
+               create_time,
+               update_time,
+               edu_id,
+               title,
+               acquire_time,
+               type,
+               remark,
+               certify_uri,
+               audit_status,
+               feedback
+        from achieve
+        where edu_id = #{eduId}
+    </select>
+
+    <!--通过主键修改数据-->
+    <update id="updateAchieve">
+        update achieve
+        <set>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="eduId != null and eduId != ''">
+                edu_id = #{eduId},
+            </if>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="acquireTime != null">
+                acquire_time = #{acquireTime},
+            </if>
+            <if test="type != null and type != ''">
+                type = #{type},
+            </if>
+            <if test="remark != null and remark != ''">
+                remark = #{remark},
+            </if>
+            <if test="certifyUri != null and certifyUri != ''">
+                certify_uri = #{certifyUri},
+            </if>
+            <if test="auditStatus != null">
+                audit_status = #{auditStatus},
+            </if>
+            <if test="feedback != null and feedback != ''">
+                feedback = #{feedback},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="AchieveMap">
+        select id,
+               create_time,
+               update_time,
+               edu_id,
+               title,
+               acquire_time,
+               type,
+               remark,
+               certify_uri,
+               audit_status,
+               feedback
+        from achieve
+        where id = #{id}
+    </select>
+
+    <select id="countEduAchieve" resultType="java.lang.Integer">
+        select count(*)
+        from achieve
+        where edu_id = #{eduId}
+          and audit_status = 1
+    </select>
+
+    <select id="queryPassedByEduId" resultMap="AchieveMap">
+        select id,
+               create_time,
+               update_time,
+               edu_id,
+               title,
+               acquire_time,
+               type,
+               remark,
+               certify_uri,
+               audit_status,
+               feedback
+        from achieve
+        where edu_id = #{eduId}
+          and audit_status = 1
+    </select>
+</mapper>
+

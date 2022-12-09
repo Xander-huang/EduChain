@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.zy68.fbChainService.dao.ReProxyDao">
+
+
+
+    <select id="selectByCaptcha"  resultType="top.zy68.fbChainService.entity.Reproxy">
+
+        select rep.id,
+            rep.sender_id as senderId,
+            rep.receiver_id as receiverId,
+            rep.cipher_text as cipherText,
+            rep.captcha,
+            rep.capsule,
+            rep.new_capsule as newCapsule,
+            rep.public_x as publicX,
+            rep.state,
+            rep.create_time
+        from  reproxy rep
+        <where>
+        <if test="captcha!=null and captcha!=''">
+            AND rep.captcha = #{captcha,jdbcType=VARCHAR}
+        </if>
+        <if test="receiverId!=null ">
+            AND rep.receiver_id = #{receiverId}
+        </if>
+    </where>
+    </select>
+
+
+    <select id="selectById"  resultType="top.zy68.fbChainService.entity.Reproxy">
+
+        select rep.id,
+        rep.sender_id as senderId,
+        rep.receiver_id as receiverId,
+        rep.cipher_text as cipherText,
+        rep.captcha,
+        rep.capsule,
+        rep.new_capsule as newCapsule,
+        rep.public_x as publicX,
+        rep.state,
+        rep.create_time
+        from  reproxy rep
+        <where>
+            <if test="id!=null ">
+                AND id = #{id}
+            </if>
+
+        </where>
+    </select>
+
+
+    <select id="selectEmail" parameterType="java.lang.String" resultType="java.lang.String">
+
+        select email
+        from  person_user
+
+        where person_id = #{id}
+
+
+    </select>
+
+    <insert id="insertReproxy" parameterType="top.zy68.fbChainService.entity.Reproxy" useGeneratedKeys="true"
+            keyColumn="id" keyProperty="id" >
+
+        INSERT INTO `bcosteaching`.`reproxy`
+
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+
+            <if test="senderId != null" >
+                sender_id,
+            </if>
+            <if test="receiverId != null" >
+                receiver_id,
+            </if>
+            <if test="cipherText != null" >
+                cipher_text,
+            </if>
+            <if test="captcha != null and captcha !=''" >
+                captcha,
+            </if>
+
+            <if test="capsule != null and capsule !=''" >
+                capsule,
+            </if>
+            <if test="newCapsule != null and newCapsule !=''" >
+                new_capsule,
+            </if>
+            <if test="publicX != null and publicX !=''" >
+                public_x,
+            </if>
+            <if test="state != null " >
+                state,
+            </if>
+            <if test="createTime != null " >
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+
+            <if test="senderId != null" >
+                #{senderId,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverId != null" >
+                #{receiverId,jdbcType=VARCHAR},
+            </if>
+            <if test="cipherText != null and cipherText!=''" >
+                #{cipherText,jdbcType=VARCHAR},
+            </if>
+            <if test="captcha != null and captcha !=''" >
+                #{captcha,jdbcType=VARCHAR},
+            </if>
+
+            <if test="capsule != null and capsule !=''" >
+                #{capsule,jdbcType=VARCHAR},
+            </if>
+            <if test="newCapsule != null and newCapsule !=''" >
+                #{newCapsule,jdbcType=VARCHAR},
+            </if>
+            <if test="publicX != null and publicX !=''" >
+                #{publicX,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null " >
+                #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null " >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+
+    </insert>
+
+
+    <update id="updateReproxy" parameterType="top.zy68.fbChainService.entity.Reproxy">
+
+        UPDATE `bcosteaching`.`reproxy`
+
+        <trim prefix="set" suffixOverrides=",">
+
+            <if test="senderId != null" >
+                sender_id = #{senderId,jdbcType=INTEGER},
+            </if>
+            <if test="receiverId != null" >
+                receiver_id = #{receiverId,jdbcType=INTEGER},
+            </if>
+            <if test="cipherText != null and cipherText!=''" >
+                cipher_text = #{cipherText,jdbcType=VARCHAR},
+            </if>
+            <if test="captcha != null and captcha !=''" >
+                captcha = #{captcha,jdbcType=VARCHAR},
+            </if>
+
+            <if test="capsule != null and capsule !=''" >
+                capsule = #{capsule,jdbcType=VARCHAR},
+            </if>
+            <if test="newCapsule != null and newCapsule !=''" >
+                new_capsule = #{newCapsule,jdbcType=VARCHAR},
+            </if>
+            <if test="publicX != null and publicX !=''" >
+                public_x = #{publicX,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null " >
+                state = #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null " >
+                create_time  = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+
+    </update>
+
+
+    <select id="selectByPersonId"  resultType="top.zy68.fbChainService.entity.Reproxy">
+
+        select rep.id,
+        rep.sender_id as senderId,
+        rep.receiver_id as receiverId,
+        rep.cipher_text as cipherText,
+        rep.captcha,
+        rep.capsule,
+        rep.new_capsule as newCapsule,
+        rep.public_x as publicX,
+        rep.state,
+        rep.create_time
+        from  reproxy rep
+        <where>
+            <if test="id!=null ">
+                AND receiver_id = #{personId}
+            </if>
+
+            <if test="start!=null and  pageNum!=null">
+                AND limit (#{start},#{pageNum})
+            </if>
+
+
+        </where>
+    </select>
+
+
+</mapper>
+

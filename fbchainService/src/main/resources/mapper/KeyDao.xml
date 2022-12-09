@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.zy68.fbChainService.dao.KeyDao">
+
+    <resultMap type="top.zy68.fbChainService.entity.Key" id="KeyMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+        <result property="publicKey" column="public_key" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+
+
+    <resultMap type="top.zy68.fbChainService.entity.Key" id="KeyMapAndName">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+        <result property="publicKey" column="public_key" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+<!--    插入数据库-->
+    <insert id="insertAnKey" >
+        insert into user_key(user_id, public_key, type)
+        value (#{userId}, #{publicKey},  #{type})
+    </insert>
+
+
+
+
+    <select id="selectOneByIdCard" parameterType="java.lang.String" resultMap="KeyMapAndName">
+        select uk.id ,
+               uk.user_id as userId,
+               uk.public_key as publicKey,
+               uk.type ,
+               uk.create_time as createTime,
+               p.name as name
+        from user_key uk
+        left join person p on p.person_id = uk.user_id
+        where uk.user_id = #{personId}
+    </select>
+
+
+
+    <select id="selectPubKeyById" parameterType="java.lang.String" resultType="java.lang.String">
+        select public_key as publicKey
+        from user_key
+        where user_id = #{userId}
+    </select>
+
+</mapper>
+

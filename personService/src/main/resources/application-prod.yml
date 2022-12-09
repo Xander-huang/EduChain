@@ -1,0 +1,82 @@
+#spring:
+#  servlet:
+#    multipart:
+#      max-file-size: 10MB # 最大文件
+#      max-request-size: 50MB # 最大请求
+#  mail:
+#    host: smtp.qq.com
+#    port: 465
+#    username: 415229929@qq.com
+#    password: heyppppwxujdcahi # smtp授权码
+#    properties:
+#      mail:
+#        smtp:
+#          ssl:
+#            enable: true
+#  redis:
+#    database: 0
+#    host: 175.178.229.62
+#    port: 6379
+#    password: admin123
+#    timeout: 1000
+#    connect-timeout: 500
+#    jedis:
+#      pool:
+#        max-active: 8
+#        max-idle: 8
+#        max-wait: -1
+#        min-idle: 0
+#server:
+#  port: 8082
+#
+##文件上传目录
+#file:
+#  store:
+#    path: F:/files
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB # 最大文件
+      max-request-size: 50MB # 最大请求
+  mail:
+    host: smtp.qq.com
+    port: 465
+    username: 1833769217@qq.com
+    password: defkkegcyahzfcce # smtp授权码
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+  redis:
+    database: 0
+    host: 43.138.236.247
+    port: 6379
+    password: 6379
+    timeout: 1000
+    connect-timeout: 500
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+        max-wait: -1
+        min-idle: 0
+server:
+  port: 8082
+
+#文件上传目录
+file:
+  store:
+    path: D:/test
+
+
+
+mybatis:
+  type-aliases-package: top.zy68.fbChainService.entity
+  mapper-locations: classpath:mapper/*.xml
+  #打印详细信息
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    cache-enabled: true #开启mybatisplus的二级缓存
+    map-underscore-to-camel-case: true

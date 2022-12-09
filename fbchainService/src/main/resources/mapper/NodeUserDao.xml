@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.zy68.fbChainService.dao.NodeUserDao">
+
+    <resultMap type="top.zy68.fbChainService.entity.NodeUser" id="NodeUserMap">
+        <result property="account" column="account" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="role" column="role" jdbcType="VARCHAR"/>
+        <result property="salt" column="salt" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--插入一条用户记录-->
+    <insert id="insertNodeUser">
+        insert into node_user(account, password, name, email, role, salt, phone)
+        values (#{account}, #{password}, #{name}, #{email}, #{role}, #{salt}, #{phone})
+    </insert>
+
+    <!--通过联盟点ID匹配用户前5位查询所有用户-->
+    <select id="queryAllByNodeId" resultMap="NodeUserMap">
+        select account,
+               password,
+               name,
+               email,
+               role,
+               salt,
+               phone
+        from node_user
+        where account LIKE CONCAT(#{nodeId}, '%')
+    </select>
+
+    <!--通过账号删除-->
+    <delete id="deleteByAccount">
+        delete
+        from node_user
+        where account = #{account}
+    </delete>
+
+    <!--通过联盟点ID匹配用户前5位查询所有用户-->
+    <select id="queryByAccount" resultMap="NodeUserMap">
+        select account,
+               password,
+               name,
+               email,
+               role,
+               salt,
+               phone
+
+        from node_user
+        where account = #{account}
+    </select>
+
+    <select id="queryAllNodeAccountByNodeId" resultType="java.lang.String">
+        select account
+        from node_user
+        where account LIKE CONCAT(#{nodeId}, '%')
+    </select>
+
+    <select id="queryUserByMail" resultMap="NodeUserMap">
+        select account,
+               password,
+               name,
+               email,
+               role,
+               salt,
+               phone
+        from node_user
+        where email = #{email}
+    </select>
+
+    <!--通过主键修改数据-->
+    <update id="updateNodeUserByAccount">
+        update node_user
+        <set>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="role != null and role != ''">
+                role = #{role},
+            </if>
+            <if test="salt != null and salt != ''">
+                salt = #{salt},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+        </set>
+        where account = #{account}
+    </update>
+
+
+    <!--&lt;!&ndash;查询指定行数据&ndash;&gt;-->
+    <!--<select id="queryAllByLimit" resultMap="NodeUserMap">-->
+    <!--    select-->
+    <!--    id, create_time, update_time, account, password, name, email, role, salt, phone-->
+    <!--    from node_user-->
+    <!--    <where>-->
+    <!--        <if test="id != null">-->
+    <!--            and id = #{id}-->
+    <!--        </if>-->
+    <!--        <if test="createTime != null">-->
+    <!--            and create_time = #{createTime}-->
+    <!--        </if>-->
+    <!--        <if test="updateTime != null">-->
+    <!--            and update_time = #{updateTime}-->
+    <!--        </if>-->
+    <!--        <if test="account != null and account != ''">-->
+    <!--            and account = #{account}-->
+    <!--        </if>-->
+    <!--        <if test="password != null and password != ''">-->
+    <!--            and password = #{password}-->
+    <!--        </if>-->
+    <!--        <if test="name != null and name != ''">-->
+    <!--            and name = #{name}-->
+    <!--        </if>-->
+    <!--        <if test="email != null and email != ''">-->
+    <!--            and email = #{email}-->
+    <!--        </if>-->
+    <!--        <if test="role != null and role != ''">-->
+    <!--            and role = #{role}-->
+    <!--        </if>-->
+    <!--        <if test="salt != null and salt != ''">-->
+    <!--            and salt = #{salt}-->
+    <!--        </if>-->
+    <!--        <if test="phone != null and phone != ''">-->
+    <!--            and phone = #{phone}-->
+    <!--        </if>-->
+    <!--    </where>-->
+    <!--    limit #{pageable.offset}, #{pageable.pageSize}-->
+    <!--</select>-->
+
+    <!--&lt;!&ndash;统计总行数&ndash;&gt;-->
+    <!--<select id="count" resultType="java.lang.Long">-->
+    <!--    select count(1)-->
+    <!--    from node_user-->
+    <!--    <where>-->
+    <!--        <if test="id != null">-->
+    <!--            and id = #{id}-->
+    <!--        </if>-->
+    <!--        <if test="createTime != null">-->
+    <!--            and create_time = #{createTime}-->
+    <!--        </if>-->
+    <!--        <if test="updateTime != null">-->
+    <!--            and update_time = #{updateTime}-->
+    <!--        </if>-->
+    <!--        <if test="account != null and account != ''">-->
+    <!--            and account = #{account}-->
+    <!--        </if>-->
+    <!--        <if test="password != null and password != ''">-->
+    <!--            and password = #{password}-->
+    <!--        </if>-->
+    <!--        <if test="name != null and name != ''">-->
+    <!--            and name = #{name}-->
+    <!--        </if>-->
+    <!--        <if test="email != null and email != ''">-->
+    <!--            and email = #{email}-->
+    <!--        </if>-->
+    <!--        <if test="role != null and role != ''">-->
+    <!--            and role = #{role}-->
+    <!--        </if>-->
+    <!--        <if test="salt != null and salt != ''">-->
+    <!--            and salt = #{salt}-->
+    <!--        </if>-->
+    <!--        <if test="phone != null and phone != ''">-->
+    <!--            and phone = #{phone}-->
+    <!--        </if>-->
+    <!--    </where>-->
+    <!--</select>-->
+
+    <!--&lt;!&ndash;新增所有列&ndash;&gt;-->
+    <!--<insert id="insert" keyProperty="id" useGeneratedKeys="true">-->
+    <!--    insert into node_user(create_time, update_time, account, password, name, email, role, salt, phone)-->
+    <!--    values (#{createTime}, #{updateTime}, #{account}, #{password}, #{name}, #{email}, #{role}, #{salt}, #{phone})-->
+    <!--</insert>-->
+
+    <!--<insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">-->
+    <!--    insert into node_user(create_time, update_time, account, password, name, email, role, salt, phone)-->
+    <!--    values-->
+    <!--    <foreach collection="entities" item="entity" separator=",">-->
+    <!--        (#{entity.createTime}, #{entity.updateTime}, #{entity.account}, #{entity.password}, #{entity.name},-->
+    <!--        #{entity.email}, #{entity.role}, #{entity.salt}, #{entity.phone})-->
+    <!--    </foreach>-->
+    <!--</insert>-->
+
+    <!--<insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">-->
+    <!--    insert into node_user(create_time, update_time, account, password, name, email, role, salt, phone)-->
+    <!--    values-->
+    <!--    <foreach collection="entities" item="entity" separator=",">-->
+    <!--        (#{entity.createTime}, #{entity.updateTime}, #{entity.account}, #{entity.password}, #{entity.name},-->
+    <!--        #{entity.email}, #{entity.role}, #{entity.salt}, #{entity.phone})-->
+    <!--    </foreach>-->
+    <!--    on duplicate key update-->
+    <!--    create_time = values(create_time),-->
+    <!--    update_time = values(update_time),-->
+    <!--    account = values(account),-->
+    <!--    password = values(password),-->
+    <!--    name = values(name),-->
+    <!--    email = values(email),-->
+    <!--    role = values(role),-->
+    <!--    salt = values(salt),-->
+    <!--    phone = values(phone)-->
+    <!--</insert>-->
+
+    <!--&lt;!&ndash;通过主键修改数据&ndash;&gt;-->
+    <!--<update id="update">-->
+    <!--    update node_user-->
+    <!--    <set>-->
+    <!--        <if test="createTime != null">-->
+    <!--            create_time = #{createTime},-->
+    <!--        </if>-->
+    <!--        <if test="updateTime != null">-->
+    <!--            update_time = #{updateTime},-->
+    <!--        </if>-->
+    <!--        <if test="account != null and account != ''">-->
+    <!--            account = #{account},-->
+    <!--        </if>-->
+    <!--        <if test="password != null and password != ''">-->
+    <!--            password = #{password},-->
+    <!--        </if>-->
+    <!--        <if test="name != null and name != ''">-->
+    <!--            name = #{name},-->
+    <!--        </if>-->
+    <!--        <if test="email != null and email != ''">-->
+    <!--            email = #{email},-->
+    <!--        </if>-->
+    <!--        <if test="role != null and role != ''">-->
+    <!--            role = #{role},-->
+    <!--        </if>-->
+    <!--        <if test="salt != null and salt != ''">-->
+    <!--            salt = #{salt},-->
+    <!--        </if>-->
+    <!--        <if test="phone != null and phone != ''">-->
+    <!--            phone = #{phone},-->
+    <!--        </if>-->
+    <!--    </set>-->
+    <!--    where id = #{id}-->
+    <!--</update>-->
+
+    <!--&lt;!&ndash;通过主键删除&ndash;&gt;-->
+    <!--<delete id="deleteById">-->
+    <!--    delete-->
+    <!--    from node_user-->
+    <!--    where id = #{id}-->
+    <!--</delete>-->
+
+</mapper>
+

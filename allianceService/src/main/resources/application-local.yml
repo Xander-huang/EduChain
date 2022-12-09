@@ -1,0 +1,36 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB # 最大文件
+      max-request-size: 50MB # 最大请求
+
+  mail:
+    host: smtp.qq.com
+    port: 465
+    username: 415229929@qq.com
+    password: heyppppwxujdcahi # smtp授权码
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/main/java
+  redis:
+    host: 127.0.0.1
+    port: 6379
+
+server:
+  port: 8083
+  tomcat:
+    max-http-form-post-size: -1 # 取消最大post上传限制
+
+#文件上传目录
+file:
+  store:
+    path: F:/files
+
+fbAdmin:
+  email: zymail68@foxmail.com,1501024528@qq.com

@@ -1,0 +1,38 @@
+spring:
+  redis:
+    database: 0
+    host: 43.138.236.247
+    port: 6379
+    password: 6379
+    timeout: 1000
+    connect-timeout: 500
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+        max-wait: -1
+        min-idle: 0
+  servlet:
+    multipart:
+      max-file-size: 10MB # 最大文件
+      max-request-size: 50MB # 最大请求
+  mail:
+    host: smtp.qq.com
+    port: 465
+    username: 1833769217@qq.com
+    password: defkkegcyahzfcce # smtp授权码
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+
+server:
+  port: 8084
+
+grpc:
+  host:
+  serverPort: 8888
+
+email:
+  ip: 43.138.236.247

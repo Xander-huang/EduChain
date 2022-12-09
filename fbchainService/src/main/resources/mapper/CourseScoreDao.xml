@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.zy68.fbChainService.dao.CourseScoreDao">
+
+    <resultMap type="top.zy68.fbChainService.entity.CourseScore" id="CourseScoreMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="score" column="score" jdbcType="INTEGER"/>
+        <result property="courseId" column="course_id" jdbcType="VARCHAR"/>
+        <result property="eduId" column="edu_id" jdbcType="VARCHAR"/>
+        <result property="certifyUri" column="certify_uri" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap type="top.zy68.fbChainService.entity.CourseScore" id="CourseScoreWithCourseMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="score" column="score" jdbcType="INTEGER"/>
+        <result property="courseId" column="course_id" jdbcType="VARCHAR"/>
+        <result property="eduId" column="edu_id" jdbcType="VARCHAR"/>
+        <result property="certifyUri" column="certify_uri" jdbcType="VARCHAR"/>
+        <association property="course">
+            <result property="courseId" column="course_id" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="credit" column="credit" jdbcType="VARCHAR"/>
+        </association>
+    </resultMap>
+
+    <resultMap type="top.zy68.fbChainService.dto.StrFloatKvDTO" id="strFloatKvMap">
+        <result property="dataKey" column="data_key" jdbcType="VARCHAR"/>
+        <result property="dataValue" column="data_value" jdbcType="FLOAT"/>
+    </resultMap>
+
+    <update id="updateScoreByStuIdAndCourseId">
+        update course_score
+        <set>
+            score = #{score}
+        </set>
+        where edu_id = #{eduId} and course_id = #{courseId}
+    </update>
+
+    <delete id="deleteAllByEduId">
+        delete
+        from course_score
+        where edu_id = #{eduId}
+    </delete>
+
+    <!--查询教育经历ID下的所有-->
+    <select id="queryAllByEduId" resultMap="CourseScoreMap">
+        select id,
+               score,
+               course_id,
+               edu_id,
+               certify_uri
+        from course_score
+        where edu_id = #{eduId}
+    </select>
+
+    <select id="queryAllWithCourseByEduId" resultMap="CourseScoreWithCourseMap">
+        select a.id,
+               a.score,
+               a.course_id,
+               a.edu_id,
+               a.certify_uri,
+               b.course_id,
+               b.name,
+               b.credit
+        from course_score a,
+             course b
+        where a.edu_id = #{eduId}
+          and a.course_id = b.course_id
+    </select>
+
+    <select id="queryMajorIdAndAvgCourseScore" resultMap="strFloatKvMap">
+        --         在2022年数据的基础上，按专业分组，再计算组内平均分，再排序+limit前几行，选择专业和平均分
+        select LEFT (course_id, 8) as data_key, AVG (score) as data_value
+        from course_score
+        where create_time like CONCAT(#{currYear}
+            , '%')
+          and course_id like CONCAT(#{nodeId}
+            , '%')
+        GROUP BY data_key
+        ORDER BY data_value DESC
+            LIMIT #{priorityMajorNum}
+    </select>
+
+    <select id="countStuNumByAvgScoreInRange" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM (SELECT AVG(score) as avg_score
+              FROM course_score
+              where create_time like concat(#{currYear}, '%')
+                and edu_id like concat(#{nodeId}, '%')
+              GROUP BY edu_id) as a
+        where a.avg_score <![CDATA[ > ]]> #{small}
+          and a.avg_score <![CDATA[ <= ]]> #{big}
+    </select>
+
+    <select id="countStuNumByAvgScoreLessThan" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM (SELECT AVG(score) as avg_score
+              FROM course_score
+              where create_time like concat(#{currYear}, '%')
+                and edu_id like concat(#{nodeId}, '%')
+              GROUP BY edu_id) as a
+        where a.avg_score <![CDATA[ < ]]> #{score}
+    </select>
+
+    <select id="queryWithCourseByStuIdAndCourseId" resultMap="CourseScoreWithCourseMap">
+        select a.id,
+               a.score,
+               a.course_id,
+               a.edu_id,
+               a.certify_uri,
+               b.course_id,
+               b.name,
+               b.credit
+        from course_score a,
+             course b
+        where a.edu_id = #{eduId}
+          and a.course_id = b.course_id
+          and a.course_id = #{courseId}
+    </select>
+
+    <insert id="insertCourseByStu">
+        insert into course_score(edu_id, course_id)
+            value (#{eduId}, #{courseId})
+    </insert>
+
+    <insert id="insertCourseScore">
+        insert into course_score(edu_id, course_id, score)
+            value (#{eduId}, #{courseId}, #{score})
+    </insert>
+
+    <!--批量插入课程成绩-->
+    <insert id="insertCourseScoreBatch">
+        insert into course_score(edu_id, course_id, score)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.eduId}, #{item.courseId}, #{item.score})
+        </foreach>
+    </insert>
+
+    <delete id="deleteCourseByStu">
+        delete
+        from course_score
+        where edu_id = #{eduId}
+          and course_id = #{courseId}
+    </delete>
+
+    <!--通过主键修改数据-->
+    <update id="updateById">
+        update course_score
+        <set>
+            <if test="score != null">
+                score = #{score},
+            </if>
+            <if test="courseId != null and courseId != ''">
+                course_id = #{courseId},
+            </if>
+            <if test="eduId != null and eduId != ''">
+                edu_id = #{eduId},
+            </if>
+            <if test="certifyUri != null and certifyUri != ''">
+                certify_uri = #{certifyUri},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>
+

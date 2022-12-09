@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.zy68.fbChainService.dao.AllianceNodeDao">
+
+    <resultMap type="top.zy68.fbChainService.entity.AllianceNode" id="AllianceNodeMap">
+        <result property="nodeId" column="node_id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="TINYINT"/>
+    </resultMap>
+    <insert id="insertNode">
+        insert into alliance_node(node_id, name, type)
+        values (#{nodeId}, #{nodeName}, #{type})
+    </insert>
+
+    <!--查询单个-->
+    <select id="queryByNodeId" resultMap="AllianceNodeMap">
+        select node_id,
+               name,
+               type
+        from alliance_node
+        where node_id = #{nodeId}
+    </select>
+
+    <select id="queryAllNodeId" resultType="java.lang.Integer">
+        select node_id
+        from alliance_node
+    </select>
+</mapper>
+

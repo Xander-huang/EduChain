@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.zy68.fbChainService.dao.CourseDao">
+
+    <resultMap type="top.zy68.fbChainService.entity.Course" id="CourseMap">
+        <result property="courseId" column="course_id" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="credit" column="credit" jdbcType="TINYINT"/>
+    </resultMap>
+    <resultMap type="top.zy68.fbChainService.dto.IntKvDTO" id="kvMap">
+        <result property="dataKey" column="data_key" jdbcType="INTEGER"/>
+        <result property="dataValue" column="data_value" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--通过课程编号查询单个-->
+    <select id="queryByCourseId" resultMap="CourseMap">
+        select course_id,
+               name,
+               credit
+        from course
+        where course_id = #{courseId}
+    </select>
+
+    <!--通过课程编号查询单个-->
+    <select id="queryAllCourseIdByMajorId" resultType="java.lang.String">
+        select course_id
+        from course
+        where course_id LIKE CONCAT(#{majorId}, '%')
+    </select>
+
+    <insert id="insertBatch">
+        insert into course(course_id, name, credit)
+        values
+        <foreach collection="list" item="entity" separator=",">
+            (#{entity.courseId}, #{entity.name}, #{entity.credit})
+        </foreach>
+    </insert>
+
+    <select id="queryCourseSetByMajorId" resultMap="CourseMap">
+        select course_id,
+               name,
+               credit
+        from course
+        where course_id like concat(#{majorId}, '%')
+    </select>
+
+    <select id="countNodeCourse" resultType="java.lang.Integer">
+        select count(*)
+        from course
+        where course_id like concat(#{nodeId}, '%')
+    </select>
+
+    <select id="countAnnualNewCourse" resultMap="kvMap">
+        select a.yearNum as data_key, COUNT(*) as data_value
+        from (select LEFT (create_time, 4) as yearNum
+              from course
+              where course_id like concat(#{nodeId}, '%')) as a
+        GROUP BY a.yearNum
+        ORDER BY a.yearNum
+    </select>
+
+    <insert id="insertCourse">
+        insert into course(course_id,
+                           name,
+                           credit)
+            value (#{courseId}, #{name}, #{credit})
+    </insert>
+
+    <insert id="insertCourseBatch">
+        insert into
+        course (course_id, name, credit)
+        values
+        <foreach collection="courses" item="item" separator=",">
+            (#{item.courseId}, #{item.name}, #{item.credit})
+        </foreach>
+    </insert>
+
+    <delete id="deleteCourse">
+        delete
+        from course
+        where course_id = #{courseId}
+    </delete>
+
+    <delete id="deleteAllCourseByMajorId">
+        delete
+        from course
+        where course_id like concat(#{majorId}, '%')
+    </delete>
+
+    <update id="updateCourse">
+        update course
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="credit != null and credit != ''">
+                credit = #{credit}
+            </if>
+        </set>
+        where course_id = #{courseId}
+    </update>
+    <!--&lt;!&ndash;查询指定行数据&ndash;&gt;-->
+    <!--<select id="queryAllByLimit" resultMap="CourseMap">-->
+    <!--    select-->
+    <!--      id, create_time, update_time, credit, course_id, name-->
+    <!--    from course-->
+    <!--    <where>-->
+    <!--        <if test="id != null">-->
+    <!--            and id = #{id}-->
+    <!--        </if>-->
+    <!--        <if test="createTime != null">-->
+    <!--            and create_time = #{createTime}-->
+    <!--        </if>-->
+    <!--        <if test="updateTime != null">-->
+    <!--            and update_time = #{updateTime}-->
+    <!--        </if>-->
+    <!--        <if test="credit != null">-->
+    <!--            and credit = #{credit}-->
+    <!--        </if>-->
+    <!--        <if test="courseId != null and courseId != ''">-->
+    <!--            and course_id = #{courseId}-->
+    <!--        </if>-->
+    <!--        <if test="name != null and name != ''">-->
+    <!--            and name = #{name}-->
+    <!--        </if>-->
+    <!--    </where>-->
+    <!--    limit #{pageable.offset}, #{pageable.pageSize}-->
+    <!--</select>-->
+
+    <!--&lt;!&ndash;统计总行数&ndash;&gt;-->
+    <!--<select id="count" resultType="java.lang.Long">-->
+    <!--    select count(1)-->
+    <!--    from course-->
+    <!--    <where>-->
+    <!--        <if test="id != null">-->
+    <!--            and id = #{id}-->
+    <!--        </if>-->
+    <!--        <if test="createTime != null">-->
+    <!--            and create_time = #{createTime}-->
+    <!--        </if>-->
+    <!--        <if test="updateTime != null">-->
+    <!--            and update_time = #{updateTime}-->
+    <!--        </if>-->
+    <!--        <if test="credit != null">-->
+    <!--            and credit = #{credit}-->
+    <!--        </if>-->
+    <!--        <if test="courseId != null and courseId != ''">-->
+    <!--            and course_id = #{courseId}-->
+    <!--        </if>-->
+    <!--        <if test="name != null and name != ''">-->
+    <!--            and name = #{name}-->
+    <!--        </if>-->
+    <!--    </where>-->
+    <!--</select>-->
+
+    <!--&lt;!&ndash;新增所有列&ndash;&gt;-->
+    <!--<insert id="insert" keyProperty="id" useGeneratedKeys="true">-->
+    <!--    insert into course(create_time, update_time, credit, course_id, name)-->
+    <!--    values (#{createTime}, #{updateTime}, #{credit}, #{courseId}, #{name})-->
+    <!--</insert>-->
+
+    <!--<insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">-->
+    <!--    insert into course(create_time, update_time, credit, course_id, name)-->
+    <!--    values-->
+    <!--    <foreach collection="entities" item="entity" separator=",">-->
+    <!--    (#{entity.createTime}, #{entity.updateTime}, #{entity.credit}, #{entity.courseId}, #{entity.name})-->
+    <!--    </foreach>-->
+    <!--</insert>-->
+
+    <!--<insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">-->
+    <!--    insert into course(create_time, update_time, credit, course_id, name)-->
+    <!--    values-->
+    <!--    <foreach collection="entities" item="entity" separator=",">-->
+    <!--        (#{entity.createTime}, #{entity.updateTime}, #{entity.credit}, #{entity.courseId}, #{entity.name})-->
+    <!--    </foreach>-->
+    <!--    on duplicate key update-->
+    <!--    create_time = values(create_time),-->
+    <!--    update_time = values(update_time),-->
+    <!--    credit = values(credit),-->
+    <!--    course_id = values(course_id),-->
+    <!--    name = values(name)-->
+    <!--</insert>-->
+
+    <!--&lt;!&ndash;通过主键修改数据&ndash;&gt;-->
+    <!--<update id="update">-->
+    <!--    update course-->
+    <!--    <set>-->
+    <!--        <if test="createTime != null">-->
+    <!--            create_time = #{createTime},-->
+    <!--        </if>-->
+    <!--        <if test="updateTime != null">-->
+    <!--            update_time = #{updateTime},-->
+    <!--        </if>-->
+    <!--        <if test="credit != null">-->
+    <!--            credit = #{credit},-->
+    <!--        </if>-->
+    <!--        <if test="courseId != null and courseId != ''">-->
+    <!--            course_id = #{courseId},-->
+    <!--        </if>-->
+    <!--        <if test="name != null and name != ''">-->
+    <!--            name = #{name},-->
+    <!--        </if>-->
+    <!--    </set>-->
+    <!--    where id = #{id}-->
+    <!--</update>-->
+
+    <!--&lt;!&ndash;通过主键删除&ndash;&gt;-->
+    <!--<delete id="deleteById">-->
+    <!--    delete from course where id = #{id}-->
+    <!--</delete>-->
+
+</mapper>
+

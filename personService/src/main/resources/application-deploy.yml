@@ -1,0 +1,35 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB # 最大文件
+      max-request-size: 50MB # 最大请求
+  mail:
+    host: smtp.qq.com
+    port: 465
+    username: 415229929@qq.com
+    password: heyppppwxujdcahi # smtp授权码
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password: admin123
+    timeout: 1000
+    connect-timeout: 500
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+        max-wait: -1
+        min-idle: 0
+server:
+  port: 8082
+
+#文件上传目录
+file:
+  store:
+    path: /app/files

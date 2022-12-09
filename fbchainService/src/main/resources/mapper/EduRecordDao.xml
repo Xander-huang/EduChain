@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.zy68.fbChainService.dao.EduRecordDao">
+
+    <resultMap type="top.zy68.fbChainService.entity.EduRecord" id="EduRecordMap">
+        <result property="eduId" column="edu_id" jdbcType="VARCHAR"/>
+        <result property="personId" column="person_id" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="VARCHAR"/>
+        <result property="beginTime" column="begin_time" jdbcType="INTEGER"/>
+        <result property="endTime" column="end_time" jdbcType="INTEGER"/>
+        <result property="nodeId" column="node_id" jdbcType="INTEGER"/>
+        <result property="nodeName" column="node_name" jdbcType="VARCHAR"/>
+        <result property="majorName" column="major_name" jdbcType="VARCHAR"/>
+        <result property="acquireCredit" column="acquire_credit" jdbcType="INTEGER"/>
+        <result property="graduateCredit" column="graduate_credit" jdbcType="INTEGER"/>
+        <result property="certifyUri" column="certify_uri" jdbcType="VARCHAR"/>
+        <result property="eduTransactionHash" column="edu_tx_hash" jdbcType="VARCHAR"/>
+        <result property="coursesTransactionHash" column="courses_tx_hash" jdbcType="VARCHAR"/>
+        <result property="achievesTransactionHash" column="achieves_tx_hash" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap type="top.zy68.fbChainService.dto.IntKvDTO" id="kvMap">
+        <result property="dataKey" column="data_key" jdbcType="INTEGER"/>
+        <result property="dataValue" column="data_value" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <insert id="insert">
+        insert into edu_record(edu_id, person_id, type, begin_time, end_time, node_id, node_name,
+                               major_name, acquire_credit, graduate_credit, certify_uri, edu_tx_hash, courses_tx_hash,
+                               achieves_tx_hash)
+        values (#{eduId}, #{personId}, #{type}, #{beginTime}, #{endTime}, #{nodeId}, #{nodeName},
+                #{majorName}, #{acquireCredit}, #{graduateCredit}, #{certifyUri}, #{eduTransactionHash},
+                #{coursesTransactionHash}, #{achievesTransactionHash})
+    </insert>
+
+    <update id="updateByEduId">
+        update edu_record
+        <set>
+            <if test="eduRecord.eduId != null and eduRecord.eduId != ''">
+                edu_id = #{eduRecord.eduId},
+            </if>
+            <if test="eduRecord.personId != null and eduRecord.personId != ''">
+                person_id = #{eduRecord.personId},
+            </if>
+            <if test="eduRecord.type != null and eduRecord.type != ''">
+                type = #{eduRecord.type},
+            </if>
+            <if test="eduRecord.beginTime != null">
+                begin_time = #{eduRecord.beginTime},
+            </if>
+            <if test="eduRecord.endTime != null">
+                end_time = #{eduRecord.endTime},
+            </if>
+            <if test="eduRecord.nodeId != null and eduRecord.nodeId != ''">
+                node_id = #{eduRecord.nodeId},
+            </if>
+            <if test="eduRecord.nodeName != null and eduRecord.nodeName != ''">
+                node_name = #{eduRecord.nodeName},
+            </if>
+            <if test="eduRecord.majorName != null and eduRecord.majorName != ''">
+                major_name = #{eduRecord.majorName},
+            </if>
+            <if test="eduRecord.acquireCredit != null">
+                acquire_credit = #{eduRecord.acquireCredit},
+            </if>
+            <if test="eduRecord.graduateCredit != null">
+                graduate_credit = #{eduRecord.graduateCredit},
+            </if>
+            <if test="eduRecord.certifyUri != null and eduRecord.certifyUri != ''">
+                certify_uri = #{eduRecord.certifyUri},
+            </if>
+            <if test="eduRecord.eduTransactionHash != null and eduRecord.eduTransactionHash != ''">
+                edu_tx_hash = #{eduRecord.eduTransactionHash},
+            </if>
+            <if test="eduRecord.coursesTransactionHash != null and eduRecord.coursesTransactionHash != ''">
+                courses_tx_hash = #{eduRecord.coursesTransactionHash},
+            </if>
+            <if test="eduRecord.achievesTransactionHash != null and eduRecord.achievesTransactionHash != ''">
+                achieves_tx_hash = #{eduRecord.achievesTransactionHash},
+            </if>
+        </set>
+        where edu_id = #{eduId}
+    </update>
+
+    <update id="plusAcCredit">
+        update edu_record
+        <set>
+            <if test="credit != null and credit != ''">
+                acquire_credit = acquire_credit + #{credit}
+            </if>
+        </set>
+        where edu_id = #{eduId}
+    </update>
+
+    <delete id="deleteEduRecord">
+        delete
+        from edu_record
+        where edu_id = #{eduId}
+    </delete>
+
+    <!--通过身份证号查询所有记录-->
+    <select id="queryAllByPersonId" resultMap="EduRecordMap">
+        select edu_id,
+               person_id,
+               type,
+               begin_time,
+               end_time,
+               node_id,
+               node_name,
+               major_name,
+               acquire_credit,
+               graduate_credit,
+               certify_uri,
+               edu_tx_hash,
+               courses_tx_hash,
+               achieves_tx_hash
+        from edu_record
+        where person_id = #{personId}
+    </select>
+
+    <select id="queryByEduId" resultMap="EduRecordMap">
+        select edu_id,
+               person_id,
+               type,
+               begin_time,
+               end_time,
+               node_id,
+               node_name,
+               major_name,
+               acquire_credit,
+               graduate_credit,
+               certify_uri,
+               edu_tx_hash,
+               courses_tx_hash,
+               achieves_tx_hash
+        from edu_record
+        where edu_id = #{eduId}
+    </select>
+
+    <select id="countAnnualNewStu" resultMap="kvMap">
+        SELECT begin_time as data_key, COUNT(*) as data_value
+        FROM edu_record
+        WHERE edu_id LIKE CONCAT(#{nodeId}, '%')
+        GROUP BY begin_time
+        ORDER BY begin_time
+    </select>
+
+    <select id="countAnnualUplinkedStu" resultMap="kvMap">
+        SELECT begin_time as data_key, COUNT(*) as data_value
+        FROM edu_record
+        WHERE edu_id LIKE CONCAT(#{nodeId}, '%')
+          and edu_tx_hash IS NOT NULL
+        GROUP BY begin_time
+        ORDER BY begin_time
+    </select>
+
+    <select id="countCurrYearMajorStuNum" resultMap="kvMap">
+        select LEFT (edu_id, 8) as data_key, COUNT(*) as data_value
+        from edu_record
+        where create_time like CONCAT(#{currYear}, '%') and edu_id like CONCAT(#{nodeId}, '%')
+        GROUP BY data_key
+        ORDER BY data_value DESC
+        LIMIT #{priorityMajorNum}
+    </select>
+
+    <select id="queryEduIdByCondition" resultType="java.lang.String">
+        select edu_id
+        from edu_record
+        where person_id = #{personId}
+          and type = #{eduType}
+          and edu_id like CONCAT(#{majorId}, '%')
+    </select>
+    <select id="countNodeUplinkedStuNum" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM edu_record
+        WHERE edu_id LIKE CONCAT(#{nodeId}, '%')
+          and edu_tx_hash IS NOT NULL
+    </select>
+
+</mapper>
+

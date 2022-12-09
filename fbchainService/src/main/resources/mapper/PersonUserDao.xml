@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.zy68.fbChainService.dao.PersonUserDao">
+
+    <resultMap type="top.zy68.fbChainService.entity.PersonUser" id="PersonUserMap">
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="personId" column="person_id" jdbcType="VARCHAR"/>
+        <result property="salt" column="salt" jdbcType="VARCHAR"/>
+        <result property="signUserId" column="sign_user_id" jdbcType="VARCHAR"/>
+        <result property="publicKey" column="public_key" jdbcType="VARCHAR"/>
+        <result property="address" column="address" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap type="top.zy68.fbChainService.entity.PersonUser" id="PersonUserMapName">
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="personId" column="person_id" jdbcType="VARCHAR"/>
+        <result property="salt" column="salt" jdbcType="VARCHAR"/>
+        <result property="signUserId" column="sign_user_id" jdbcType="VARCHAR"/>
+        <result property="publicKey" column="public_key" jdbcType="VARCHAR"/>
+        <result property="address" column="address" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--新增一条个人用户记录-->
+    <insert id="insertPersonUser">
+        insert into person_user(person_id, phone, email, password, salt,sign_user_id,public_key,address,type)
+        values (#{personId}, #{phone}, #{email}, #{password}, #{salt},#{signUserId},#{publicKey},#{address},#{type})
+    </insert>
+
+    <!--通过身份证号查询单个-->
+    <select id="queryPersonUserByPersonId" parameterType="java.lang.String" resultMap="PersonUserMapName">
+        select pu.person_id,
+               pu.phone,
+               pu.email,
+               pu.password,
+               pu.salt,
+               pu.sign_user_id,
+               pu.public_key,
+               pu.address,
+               p.name
+        from person_user pu
+        left join person p
+        on p.id = pu.person_id
+        where pu.person_id = #{personId}
+    </select>
+
+    <!--通过主键修改数据-->
+    <update id="updatePersonUserByPersonId">
+        update person_user
+        <set>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="salt != null and salt != ''">
+                salt = #{salt},
+            </if>
+        </set>
+        where person_id = #{personId}
+    </update>
+
+    <!--通过身份证号查询单个-->
+    <select id="queryPersonUserByEmail" resultMap="PersonUserMap">
+        select person_id,
+               phone,
+               email,
+               password,
+               salt,
+               sign_user_id,
+               public_key,
+               address
+        from person_user
+        where email = #{email}
+    </select>
+    <select id="findUserBySignUserId" resultMap="PersonUserMap">
+        select person_id,
+               phone,
+               email,
+               password,
+              salt,
+               sign_user_id,
+               public_key,
+               address
+        from person_user
+        where sign_user_id = #{signUserId}
+    </select>
+    <!--&lt;!&ndash;查询指定行数据&ndash;&gt;-->
+    <!--<select id="queryAllByLimit" resultMap="PersonUserMap">-->
+    <!--    select-->
+    <!--    id, create_time, update_time, phone, email, password, person_id, salt-->
+    <!--    from person_user-->
+    <!--    <where>-->
+    <!--        <if test="id != null">-->
+    <!--            and id = #{id}-->
+    <!--        </if>-->
+    <!--        <if test="createTime != null">-->
+    <!--            and create_time = #{createTime}-->
+    <!--        </if>-->
+    <!--        <if test="updateTime != null">-->
+    <!--            and update_time = #{updateTime}-->
+    <!--        </if>-->
+    <!--        <if test="phone != null and phone != ''">-->
+    <!--            and phone = #{phone}-->
+    <!--        </if>-->
+    <!--        <if test="email != null and email != ''">-->
+    <!--            and email = #{email}-->
+    <!--        </if>-->
+    <!--        <if test="password != null and password != ''">-->
+    <!--            and password = #{password}-->
+    <!--        </if>-->
+    <!--        <if test="personId != null and personId != ''">-->
+    <!--            and person_id = #{personId}-->
+    <!--        </if>-->
+    <!--        <if test="salt != null and salt != ''">-->
+    <!--            and salt = #{salt}-->
+    <!--        </if>-->
+    <!--    </where>-->
+    <!--    limit #{pageable.offset}, #{pageable.pageSize}-->
+    <!--</select>-->
+
+    <!--&lt;!&ndash;统计总行数&ndash;&gt;-->
+    <!--<select id="count" resultType="java.lang.Long">-->
+    <!--    select count(1)-->
+    <!--    from person_user-->
+    <!--    <where>-->
+    <!--        <if test="id != null">-->
+    <!--            and id = #{id}-->
+    <!--        </if>-->
+    <!--        <if test="createTime != null">-->
+    <!--            and create_time = #{createTime}-->
+    <!--        </if>-->
+    <!--        <if test="updateTime != null">-->
+    <!--            and update_time = #{updateTime}-->
+    <!--        </if>-->
+    <!--        <if test="phone != null and phone != ''">-->
+    <!--            and phone = #{phone}-->
+    <!--        </if>-->
+    <!--        <if test="email != null and email != ''">-->
+    <!--            and email = #{email}-->
+    <!--        </if>-->
+    <!--        <if test="password != null and password != ''">-->
+    <!--            and password = #{password}-->
+    <!--        </if>-->
+    <!--        <if test="personId != null and personId != ''">-->
+    <!--            and person_id = #{personId}-->
+    <!--        </if>-->
+    <!--        <if test="salt != null and salt != ''">-->
+    <!--            and salt = #{salt}-->
+    <!--        </if>-->
+    <!--    </where>-->
+    <!--</select>-->
+
+    <!--&lt;!&ndash;新增所有列&ndash;&gt;-->
+    <!--<insert id="insert" keyProperty="id" useGeneratedKeys="true">-->
+    <!--    insert into person_user(create_time, update_time, phone, email, password, person_id, salt)-->
+    <!--    values (#{createTime}, #{updateTime}, #{phone}, #{email}, #{password}, #{personId}, #{salt})-->
+    <!--</insert>-->
+
+    <!--<insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">-->
+    <!--    insert into person_user(create_time, update_time, phone, email, password, person_id, salt)-->
+    <!--    values-->
+    <!--    <foreach collection="entities" item="entity" separator=",">-->
+    <!--        (#{entity.createTime}, #{entity.updateTime}, #{entity.phone}, #{entity.email}, #{entity.password},-->
+    <!--        #{entity.personId}, #{entity.salt})-->
+    <!--    </foreach>-->
+    <!--</insert>-->
+
+    <!--<insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">-->
+    <!--    insert into person_user(create_time, update_time, phone, email, password, person_id, salt)-->
+    <!--    values-->
+    <!--    <foreach collection="entities" item="entity" separator=",">-->
+    <!--        (#{entity.createTime}, #{entity.updateTime}, #{entity.phone}, #{entity.email}, #{entity.password},-->
+    <!--        #{entity.personId}, #{entity.salt})-->
+    <!--    </foreach>-->
+    <!--    on duplicate key update-->
+    <!--    create_time = values(create_time),-->
+    <!--    update_time = values(update_time),-->
+    <!--    phone = values(phone),-->
+    <!--    email = values(email),-->
+    <!--    password = values(password),-->
+    <!--    person_id = values(person_id),-->
+    <!--    salt = values(salt)-->
+    <!--</insert>-->
+
+    <!--&lt;!&ndash;通过主键修改数据&ndash;&gt;-->
+    <!--<update id="update">-->
+    <!--    update person_user-->
+    <!--    <set>-->
+    <!--        <if test="createTime != null">-->
+    <!--            create_time = #{createTime},-->
+    <!--        </if>-->
+    <!--        <if test="updateTime != null">-->
+    <!--            update_time = #{updateTime},-->
+    <!--        </if>-->
+    <!--        <if test="phone != null and phone != ''">-->
+    <!--            phone = #{phone},-->
+    <!--        </if>-->
+    <!--        <if test="email != null and email != ''">-->
+    <!--            email = #{email},-->
+    <!--        </if>-->
+    <!--        <if test="password != null and password != ''">-->
+    <!--            password = #{password},-->
+    <!--        </if>-->
+    <!--        <if test="personId != null and personId != ''">-->
+    <!--            person_id = #{personId},-->
+    <!--        </if>-->
+    <!--        <if test="salt != null and salt != ''">-->
+    <!--            salt = #{salt},-->
+    <!--        </if>-->
+    <!--    </set>-->
+    <!--    where id = #{id}-->
+    <!--</update>-->
+
+    <!--&lt;!&ndash;通过主键删除&ndash;&gt;-->
+    <!--<delete id="deleteById">-->
+    <!--    delete-->
+    <!--    from person_user-->
+    <!--    where id = #{id}-->
+    <!--</delete>-->
+
+</mapper>
+

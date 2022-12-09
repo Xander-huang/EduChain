@@ -1,0 +1,97 @@
+#spring:
+#  servlet:
+#    multipart:
+#      max-file-size: 10MB # 最大文件
+#      max-request-size: 50MB # 最大请求
+#
+#  mail:
+#    host: smtp.qq.com
+#    port: 465
+#    username: 415229929@qq.com
+#    password: heyppppwxujdcahi # smtp授权码
+#    properties:
+#      mail:
+#        smtp:
+#          ssl:
+#            enable: true
+#
+#  redis:
+#    database: 0
+#    host: 175.178.229.62
+#    port: 6379
+#    password: admin123
+#    timeout: 1000
+#    connect-timeout: 500
+#    jedis:
+#      pool:
+#        max-active: 8
+#        max-idle: 8
+#        max-wait: -1
+#        min-idle: 0
+#
+#server:
+#  port: 8083
+#  tomcat:
+#    max-http-form-post-size: -1 # 取消最大post上传限制
+#    uri-encoding: UTF-8
+#
+##文件上传目录
+#file:
+#  store:
+#    #    path: /app/files
+#    path: F:/files
+#
+#fbAdmin:
+#  email: zymail68@foxmail.com,1501024528@qq.com
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB # 最大文件
+      max-request-size: 50MB # 最大请求
+
+  mail:
+    host: smtp.qq.com
+    port: 465
+    username: 1833769217@qq.com
+    password: defkkegcyahzfcce # smtp授权码
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+
+  redis:
+    database: 0
+    host: 43.138.236.247
+    port: 6379
+    password: 6379
+    timeout: 1000
+    connect-timeout: 500
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+        max-wait: -1
+        min-idle: 0
+
+server:
+  port: 8083
+  tomcat:
+    max-http-form-post-size: -1 # 取消最大post上传限制
+    uri-encoding: UTF-8
+
+#文件上传目录
+file:
+  store:
+    #path: /app/files
+    path: E:/test
+
+#机构平台的管理员邮箱：如果有机构申请加入，这两个邮箱会收到审批邮件
+fbAdmin:
+#  email: 1312665687@qq.com
+  email: 841572832@qq.com
+
+system:
+  ip: localhost
+  #ip: 43.138.236.247

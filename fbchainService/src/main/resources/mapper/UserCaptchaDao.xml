@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.zy68.fbChainService.dao.UserCaptchaDao">
+
+
+    <select id="selectOneByCaptcha" parameterType="java.lang.String" resultType="top.zy68.fbChainService.entity.UserCaptcha">
+        select id ,
+               user_id as userId,
+               captcha ,
+               create_time as createTime,
+                capsule,
+               ciphere_text as ciphereText
+        from user_captcha
+        where captcha = #{captcha}
+    </select>
+
+
+    <insert id="insertOneCaptcha">
+        insert into user_captcha(user_id,captcha,capsule,ciphere_text)
+            value (#{userId}, #{captcha}, #{capsule}, #{ciphereText})
+    </insert>
+
+
+
+
+
+</mapper>
+

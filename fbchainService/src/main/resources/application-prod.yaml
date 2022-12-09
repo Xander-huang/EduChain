@@ -1,0 +1,95 @@
+spring:
+  datasource:
+    #    url: jdbc:mysql://175.178.229.62:3306/bcosteaching?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8
+    url: jdbc:mysql://43.138.236.247:3306/bcosteaching?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    #druid 数据源配置
+    druid:
+      initialSize: 5
+      minIdle: 5
+      maxActive: 200
+      # 配置获取连接等待超时的时间
+      maxWait: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      # 用来检测连接是否有效的sql，要求是一个查询语句
+      validationQuery: SELECT 1 FROM DUAL
+      # 建议配置为true，不影响性能，并且保证安全性。申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。
+      testWhileIdle: true
+      # 申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能
+      testOnBorrow: false
+      # 归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。
+      testOnReturn: false
+      # 是否缓存preparedStatement，也就是PSCache。PSCache对支持游标的数据库性能提升巨大，比如说oracle。在mysql下建议关闭。
+      poolPreparedStatements: true
+      # 要启用PSCache，必须配置大于0，当大于0时，poolPreparedStatements自动触发修改为true。
+      max-pool-prepared-statement-per-connection-size: 50
+      #配置监控统计拦截的filters，stat:监控统计、log4j：日志记录、wall：防御sql注入
+      #如果允许时报错  java.lang.ClassNotFoundException: org.apache.log4j.Priority
+      #解决方案：https://www.codeleading.com/article/66763522800/
+      filters: stat,wall,log4j
+      # 合并多个DruidDataSource的监控数据
+      useGlobalDataSourceStat: true
+      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  mail:
+    host: smtp.qq.com
+    port: 465
+    username: 1833769217@qq.com
+    password: defkkegcyahzfcce # smtp授权码
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+
+
+
+
+mybatis:
+  type-aliases-package: top.zy68.faChainService.entity
+  mapper-locations: classpath:mapper/*.xml
+  #打印详细信息
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    cache-enabled: true #开启mybatisplus的二级缓存
+    map-underscore-to-camel-case: true
+
+
+system:
+  peers: 43.138.236.247:20200
+  #system.peers=127.0.0.1:20200
+  ### Required
+  groupId: 1
+  ### Optional. Default will search conf,config,src/main/conf/src/main/config
+  certPath: conf
+  ### Optional. If don't specify a random private key will be used
+  #system.hexPrivateKey¡¢node.crt¡¢node.keyºÃÏñÊÇÃ»ÓÃµÄ¶«Î÷
+  #system.hexPrivateKey=8439c341cfcc4e6de58d1067ef54b037bb136a1ef01069a588cf5eac0b8b6963
+  ### Optional. Please fill this address if you want to use related service
+  contract:
+    personSolAddress: '0x84f47c79bc94939da32365b4a1d4f1961ec87ee9'
+    eduRecordSolAddress: '0xa510704341585d41bdaa852967c8e8dd504ef835'
+    courseSolAddress: '0x79285afd82120fa9b3f63d434bd7bc8bc64ef138'
+    achieveSolAddress: '0x6fce93b0b10d09e7454cdd93c87da66fc72c0463'
+
+
+
+### ### Springboot server config
+server:
+  session: timeout=60
+banner:
+  charset: UTF-8
+
+
+
+email:
+  ip: 43.138.236.247

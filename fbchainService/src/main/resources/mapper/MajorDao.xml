@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.zy68.fbChainService.dao.MajorDao">
+
+    <resultMap type="top.zy68.fbChainService.entity.Major" id="MajorMap">
+        <result property="majorId" column="major_id" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="VARCHAR"/>
+        <result property="graduateCredit" column="graduate_credit" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap type="top.zy68.fbChainService.dto.IntKvDTO" id="kvMap">
+        <result property="dataKey" column="data_key" jdbcType="INTEGER"/>
+        <result property="dataValue" column="data_value" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--通过majorId查询单个-->
+    <select id="queryMajorById" resultMap="MajorMap">
+        select major_id,
+               name,
+               type,
+               graduate_credit
+        from major
+        where major_id = #{majorId}
+    </select>
+
+    <!--通过nodeId查询多个-->
+    <select id="queryAllByNodeId" resultMap="MajorMap">
+        select major_id,
+               name,
+               type,
+               graduate_credit
+        from major
+        where major_id LIKE CONCAT(#{nodeId}, '%')
+    </select>
+
+    <!--通过nodeId查询所有专业编号-->
+    <select id="queryAllMajorIdByNodeId" resultType="java.lang.String">
+        select major_id
+        from major
+        where major_id LIKE CONCAT(#{nodeId}, '%')
+    </select>
+
+    <select id="queryMajorByNameAndType" resultMap="MajorMap">
+        select major_id,
+               name,
+               type,
+               graduate_credit
+        from major
+        where major_id LIKE CONCAT(#{nodeId}, '%')
+          and name = #{name}
+          and type = #{type}
+    </select>
+    <select id="queryMajorsByType" resultMap="MajorMap">
+        select major_id,
+               name,
+               type,
+               graduate_credit
+        from major
+        where major_id LIKE CONCAT(#{nodeId}, '%')
+          and type = #{type}
+    </select>
+
+    <select id="countNodeMajor" resultType="java.lang.Integer">
+        select count(*)
+        from major
+        where major_id LIKE CONCAT(#{nodeId}, '%')
+    </select>
+
+    <select id="countAnnualNewMajor" resultMap="kvMap">
+        select a.yearNum as data_key, COUNT(*) as data_value
+        from (select LEFT (create_time, 4) as yearNum
+              from major
+              where major_id like concat(#{nodeId}, '%')) as a
+        GROUP BY a.yearNum
+        ORDER BY a.yearNum
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insertMajor">
+        insert into major(major_id, name, type, graduate_credit)
+        values (#{majorId}, #{name}, #{type}, #{graduateCredit})
+    </insert>
+
+    <!--通过主键删除-->
+    <delete id="deleteByMajorId">
+        delete
+        from major
+        where major_id = #{majorId}
+    </delete>
+
+    <insert id="insertBatch">
+        insert into major(major_id, name, type, graduate_credit)
+        values
+        <foreach collection="list" item="entity" separator=",">
+            (#{entity.majorId}, #{entity.name}, #{entity.type}, #{entity.graduateCredit})
+        </foreach>
+    </insert>
+
+    <insert id="plusMajorCredit">
+        update major
+        <set>
+            <if test="credit != null and credit != ''">
+                graduate_credit = graduate_credit + #{credit},
+            </if>
+        </set>
+        where major_id = #{majorId}
+    </insert>
+
+    <!--通过专业编号修改数据-->
+    <update id="update">
+        update major
+        <set>
+            <if test="newName != null and newName != ''">
+                name = #{newName},
+            </if>
+            <if test="true">
+                graduate_credit = #{graduateCredit},
+            </if>
+        </set>
+        where major_id = #{majorId}
+    </update>
+
+    <!--&lt;!&ndash;查询单个&ndash;&gt;-->
+    <!--<select id="queryById" resultMap="MajorMap">-->
+    <!--    select-->
+    <!--      id, create_time, update_time, major_id, name-->
+    <!--    from major-->
+    <!--    where id = #{id}-->
+    <!--</select>-->
+
+    <!--&lt;!&ndash;查询指定行数据&ndash;&gt;-->
+    <!--<select id="queryAllByLimit" resultMap="MajorMap">-->
+    <!--    select-->
+    <!--      id, create_time, update_time, major_id, name-->
+    <!--    from major-->
+    <!--    <where>-->
+    <!--        <if test="id != null">-->
+    <!--            and id = #{id}-->
+    <!--        </if>-->
+    <!--        <if test="createTime != null">-->
+    <!--            and create_time = #{createTime}-->
+    <!--        </if>-->
+    <!--        <if test="updateTime != null">-->
+    <!--            and update_time = #{updateTime}-->
+    <!--        </if>-->
+    <!--        <if test="majorId != null and majorId != ''">-->
+    <!--            and major_id = #{majorId}-->
+    <!--        </if>-->
+    <!--        <if test="name != null and name != ''">-->
+    <!--            and name = #{name}-->
+    <!--        </if>-->
+    <!--    </where>-->
+    <!--    limit #{pageable.offset}, #{pageable.pageSize}-->
+    <!--</select>-->
+
+    <!--&lt;!&ndash;统计总行数&ndash;&gt;-->
+    <!--<select id="count" resultType="java.lang.Long">-->
+    <!--    select count(1)-->
+    <!--    from major-->
+    <!--    <where>-->
+    <!--        <if test="id != null">-->
+    <!--            and id = #{id}-->
+    <!--        </if>-->
+    <!--        <if test="createTime != null">-->
+    <!--            and create_time = #{createTime}-->
+    <!--        </if>-->
+    <!--        <if test="updateTime != null">-->
+    <!--            and update_time = #{updateTime}-->
+    <!--        </if>-->
+    <!--        <if test="majorId != null and majorId != ''">-->
+    <!--            and major_id = #{majorId}-->
+    <!--        </if>-->
+    <!--        <if test="name != null and name != ''">-->
+    <!--            and name = #{name}-->
+    <!--        </if>-->
+    <!--    </where>-->
+    <!--</select>-->
+
+    <!--&lt;!&ndash;新增所有列&ndash;&gt;-->
+    <!--<insert id="insert" keyProperty="id" useGeneratedKeys="true">-->
+    <!--    insert into major(create_time, update_time, major_id, name)-->
+    <!--    values (#{createTime}, #{updateTime}, #{majorId}, #{name})-->
+    <!--</insert>-->
+
+    <!--<insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">-->
+    <!--    insert into major(create_time, update_time, major_id, name)-->
+    <!--    values-->
+    <!--    <foreach collection="entities" item="entity" separator=",">-->
+    <!--    (#{entity.createTime}, #{entity.updateTime}, #{entity.majorId}, #{entity.name})-->
+    <!--    </foreach>-->
+    <!--</insert>-->
+
+    <!--<insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">-->
+    <!--    insert into major(create_time, update_time, major_id, name)-->
+    <!--    values-->
+    <!--    <foreach collection="entities" item="entity" separator=",">-->
+    <!--        (#{entity.createTime}, #{entity.updateTime}, #{entity.majorId}, #{entity.name})-->
+    <!--    </foreach>-->
+    <!--    on duplicate key update-->
+    <!--    create_time = values(create_time),-->
+    <!--    update_time = values(update_time),-->
+    <!--    major_id = values(major_id),-->
+    <!--    name = values(name)-->
+    <!--</insert>-->
+
+    <!--&lt;!&ndash;通过主键修改数据&ndash;&gt;-->
+    <!--<update id="update">-->
+    <!--    update major-->
+    <!--    <set>-->
+    <!--        <if test="createTime != null">-->
+    <!--            create_time = #{createTime},-->
+    <!--        </if>-->
+    <!--        <if test="updateTime != null">-->
+    <!--            update_time = #{updateTime},-->
+    <!--        </if>-->
+    <!--        <if test="majorId != null and majorId != ''">-->
+    <!--            major_id = #{majorId},-->
+    <!--        </if>-->
+    <!--        <if test="name != null and name != ''">-->
+    <!--            name = #{name},-->
+    <!--        </if>-->
+    <!--    </set>-->
+    <!--    where id = #{id}-->
+    <!--</update>-->
+
+    <!--&lt;!&ndash;通过主键删除&ndash;&gt;-->
+    <!--<delete id="deleteById">-->
+    <!--    delete from major where id = #{id}-->
+    <!--</delete>-->
+
+</mapper>
+

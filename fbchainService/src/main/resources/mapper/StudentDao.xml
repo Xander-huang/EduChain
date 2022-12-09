@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.zy68.fbChainService.dao.StudentDao">
+
+    <resultMap type="top.zy68.fbChainService.entity.Student" id="StudentMap">
+        <result property="stuId" column="stu_id" jdbcType="VARCHAR"/>
+        <result property="personId" column="person_id" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="eduType" column="edu_type" jdbcType="VARCHAR"/>
+        <result property="uplinked" column="is_uplinked" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <!--新增一条学生记录-->
+    <insert id="insertStudent">
+        insert into student(name, person_id, edu_type, is_uplinked, stu_id)
+        values (#{name}, #{personId}, #{eduType}, #{uplinked}, #{stuId})
+    </insert>
+
+    <insert id="insertStudentBatch">
+        insert into student(name, person_id, edu_type, is_uplinked, stu_id)
+        values
+        <foreach collection="list" item="entity" separator=",">
+            (#{entity.name}, #{entity.personId}, #{entity.eduType}, #{entity.uplinked}, #{entity.stuId})
+        </foreach>
+    </insert>
+
+    <update id="updateByStuId">
+        update student
+        <set>
+            <if test="student.stuId != null and student.stuId != ''">
+                stu_id = #{student.stuId},
+            </if>
+            <if test="student.personId != null and student.personId != ''">
+                person_id = #{student.personId},
+            </if>
+            <if test="student.name != null and student.name != ''">
+                name = #{student.name},
+            </if>
+            <if test="student.eduType != null and student.eduType != ''">
+                edu_type = #{student.eduType},
+            </if>
+            <if test="student.uplinked != null">
+                is_uplinked = #{student.uplinked},
+            </if>
+        </set>
+        where stu_id = #{stuId}
+    </update>
+
+    <delete id="deleteStudentByStuId">
+        delete
+        from student
+        where stu_id = #{stuId}
+    </delete>
+    <select id="queryByStuId" resultMap="StudentMap">
+        select name,
+               person_id,
+               edu_type,
+               is_uplinked,
+               stu_id
+        from student
+        where stu_id = #{stuId}
+    </select>
+    <select id="queryAllByNodeId" resultMap="StudentMap">
+        select name,
+               person_id,
+               edu_type,
+               is_uplinked,
+               stu_id
+        from student
+        where stu_id LIKE CONCAT(#{nodeId}, '%')
+    </select>
+
+    <select id="countNodeStu" resultType="java.lang.Integer">
+        select count(*)
+        from student
+        where stu_id LIKE CONCAT(#{nodeId}, '%')
+    </select>
+
+    <select id="countNodeUplinkedStu" resultType="java.lang.Integer">
+        select count(*)
+        from student
+        where stu_id LIKE CONCAT(#{nodeId}, '%')
+          and is_uplinked = 1
+    </select>
+    <select id="countMajorStu" resultType="java.lang.Integer">
+        select count(*)
+        from student
+        where stu_id LIKE CONCAT(#{majorId}, '%')
+    </select>
+
+    <select id="queryStuByPersonIdAndMajorId" resultMap="StudentMap">
+        select name,
+               person_id,
+               edu_type,
+               is_uplinked,
+               stu_id
+        from student
+        where person_id = #{personId}
+          and stu_id like CONCAT(#{majorId}, '%')
+    </select>
+</mapper>
+

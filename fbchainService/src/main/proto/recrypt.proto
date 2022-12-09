@@ -1,0 +1,152 @@
+syntax = "proto3";
+
+
+option go_package="/crypt";
+package recrypt;
+
+/**
+  *java的相关配置
+ */
+
+//option java_multiple_files = true;
+// java 生成文件所在包
+option java_package = "top.zy68.checkservice.grpc.recrypt";
+
+// java 生成文件类名称
+option java_outer_classname = "ReCrypt";
+service reCrypt {
+
+    // 接口 1 生成公私钥
+    rpc  GenerateKeys(generateKeysRequest) returns (generateKeysResponse) {}
+
+    // 接口 2 加密明文产生密文
+    rpc  CryptText(ACryptRequest) returns (ACryptResponse) {}
+
+    // 接口 3 server重加密
+    rpc  ReCrypt(ReCryptRequest) returns (ReCryptResponse) {}
+
+    //接口 4 B解密密文得到明文
+    rpc  DeCrypt(DeCryptRequest) returns (DeCryptResponse) {}
+
+    //接口 4 A通过自己的私钥来解密密文，得到明文
+    rpc  DeCryptByOwnPri(DeCryptOwnRequest) returns (DeCryptOwnResponse) {}
+}
+
+
+
+// 生成公私钥    数据结构.
+message generateKeysRequest {
+    string name = 1;
+
+}
+
+// 生成公私钥    数据结构.
+message generateKeysResponse {
+    //状态码
+    int32 code = 1;
+    //公钥
+    string aPublic = 2;
+    //私钥
+    string aPrivate = 3;
+    //消息
+    string msg = 4;
+}
+
+
+// A加密明文    数据结构.
+message ACryptRequest {
+    //消息明文
+    string plainText = 1;
+    //a自己的公钥
+    string aPublicKey = 2;
+}
+
+// A加密明文    数据结构.
+message ACryptResponse {
+    //状态码
+    int32 code = 1;
+    //密文
+    bytes ciphereText = 2;
+
+    string capsule = 3;
+    //消息
+    string msg = 4;
+}
+
+
+
+// A用B的公钥加密自己的私钥，server使用代理重加密  数据结构.
+message ReCryptRequest {
+    //a的私钥
+    string aPrivate = 1;
+    //b的公钥
+    string bPublicKey = 2;
+    //
+    string capsule = 3;
+
+}
+
+// // A用B的公钥加密自己的私钥，server使用代理重加密  数据结构.
+message ReCryptResponse {
+    //状态码
+    int32 code = 1;
+    //
+    string newCapsule = 2;
+    //重加密的公钥
+    string pubX = 3;
+    //消息
+    string msg = 4;
+}
+
+
+// B解密  数据结构.
+message DeCryptRequest {
+    //b的私钥
+    string bPrivate = 1;
+    //
+    string newCapsule = 2;
+
+    //recrypt的公钥
+    string  pubX = 3;
+
+    //密文
+    bytes cipherText = 4;
+
+}
+
+// B解密  数据结构.
+message DeCryptResponse {
+    //状态码
+    int32 code = 1;
+    //明文
+    string plainText = 2;
+
+    //消息
+    string msg = 3;
+}
+
+
+// A自己解密  数据结构.
+message DeCryptOwnRequest {
+    //a的私钥
+    string aPrivate = 1;
+    //
+    string capsule = 2;
+
+
+    //密文
+    bytes cipherText = 4;
+
+}
+
+// A自己解密  数据结构.
+message DeCryptOwnResponse {
+    //状态码
+    int32 code = 1;
+    //明文
+    string plainText = 2;
+
+    //消息
+    string msg = 3;
+}
+
