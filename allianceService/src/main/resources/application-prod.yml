@@ -4,11 +4,7 @@
 #      max-file-size: 10MB # 最大文件
 #      max-request-size: 50MB # 最大请求
 #
-#  mail:
-#    host: smtp.qq.com
-#    port: 465
-#    username: 415229929@qq.com
-#    password: heyppppwxujdcahi # smtp授权码
+
 #    properties:
 #      mail:
 #        smtp:
@@ -41,8 +37,7 @@
 #    #    path: /app/files
 #    path: F:/files
 #
-#fbAdmin:
-#  email: zymail68@foxmail.com,1501024528@qq.com
+
 
 spring:
   servlet:
@@ -91,7 +86,7 @@ file:
 
 #机构平台的管理员邮箱：如果有机构申请加入，这两个邮箱会收到审批邮件
 fbAdmin:
-#  email: 1312665687@qq.com
+
   email:
 
 system:

@@ -22,10 +22,6 @@ class CheckServiceApplicationTests {
     @Resource
     ReproxyService reproxyService;
 
-    @Test
-    void name() throws Exception {
-        reproxyService.sendEmailAuthorize2("841572832@qq.com",15,"Checker Wang");
-    }
 
     @Resource
     KeyService keyService;
